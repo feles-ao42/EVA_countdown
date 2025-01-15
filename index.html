@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>TIMER</title>
+    <link rel="stylesheet" type="text/css" href="reset.css" />
+    <link rel="stylesheet" type="text/css" href="index.css" />
+  </head>
+  <body>
+    <div class="timer">
+      <div class="limit-info">
+        <span class="display-area">卒論提出まで</span>
+        <span class="active-time-remaining display-area"
+          >DEADLINE REMAINING:</span
+        >
+        <span></span>
+      </div>
+      <div class="remain">
+        <span class="display-area">あと</span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="time display-area">
+        <span class="minute-second-area">
+          <span id="hour">00</span>:<span id="minute">00</span>:<br><span id="second">00</span
+          ><span class="millisecond-area"
+            >:<span id="millisecond">00</span></span
+          >
+        </span>
+      </div>
+      <div class="energy display-area">
+        <button id="internal-button" class="energy-item">
+          <div class="power-system">
+            <div>内部</div>
+            <div>I N T E R N A L</div>
+            <div></div>
+          </div>
+        </button>
+        <div class="energy-item">
+          <div class="power-supply">
+            <div>主電源供給システム</div>
+            <div>MAIN ENERGY SUPPLY SYSTEM</div>
+          </div>
+        </div>
+        <button id="external-button" class="energy-item disabled">
+          <div class="power-system">
+            <div>外部</div>
+            <div>E X T E R N A L</div>
+            <div></div>
+          </div>
+        </button>
+      </div>
+      <div class="control">
+        <button id="start-button" class="active-control display-area">
+          <div>S T A R T</div>
+          <div></div>
+        </button>
+        <button id="stop-button" class="display-area">
+          <div>S T O P</div>
+          <div></div>
+        </button>
+        <button id="reset-button" class="active-control display-area">
+          <div>R E S E T</div>
+          <div></div>
+        </button>
+        <button id="setup-button" class="active-control display-area">
+          <div>S E T U P</div>
+          <div></div>
+        </button>
+      </div>
+      <div class="black-area danger-emargency"></div>
+      <div class="black-area brank-area"></div>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
