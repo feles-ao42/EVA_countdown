@@ -5,6 +5,8 @@ let timerId = null;
 let isCountdownTimer = true;
 const maxMinutes = 10000000;
 
+let targetDate = null;
+
 const internalButton = document.getElementById("internal-button");
 const externalButton = document.getElementById("external-button");
 const startButton = document.getElementById("start-button");
@@ -13,19 +15,33 @@ const resetButton = document.getElementById("reset-button");
 const setupButton = document.getElementById("setup-button");
 
 const updateTimeText = (time) => {
-  let h = Math.floor(time / (1000 * 60 * 60)) % 100;
-  let m = Math.floor(time / (1000 * 60)) % 60;
-  let s = Math.floor((time % (1000 * 60)) / 1000);
-  let ms = time % 1000;
+    const totalSeconds = Math.floor(time / 1000);
+    const h = Math.floor(totalSeconds / 3600) % 1000;
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    const ms = time % 1000;
 
-  h = `0${h}`.slice(-2);
-  m = `0${m}`.slice(-2);
-  s = `0${s}`.slice(-2);
-  ms = `00${ms}`.slice(-3).slice(0, 2);
+    const formattedH = `0${h}`.slice(-3);
+    const formattedM = `0${m}`.slice(-2);
+    const formattedS = `0${s}`.slice(-2);
+    const formattedMs = `00${ms}`.slice(-3).slice(0, 2);
 
-  setTimer(h, m, s, ms);
+    setTimer(formattedH, formattedM, formattedS, formattedMs);
 };
 
+const getTargetDate = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const daytime = urlParams.get("daytime");
+    if (!daytime || daytime.length !== 12) return null;
+
+    const year = parseInt(daytime.substring(0, 4));
+    const month = parseInt(daytime.substring(4, 6)) - 1;
+    const day = parseInt(daytime.substring(6, 8));
+    const hour = parseInt(daytime.substring(8, 10));
+    const minute = parseInt(daytime.substring(10, 12));
+
+    return new Date(year, month, day, hour, minute);
+};
 
 const setTimer = (h, m, s, ms) => {
   document.getElementById("hour").textContent = h;
@@ -35,21 +51,18 @@ const setTimer = (h, m, s, ms) => {
 };
 
 const update = () => {
-  timerId = setTimeout(() => {
-    const now = Date.now();
-    if (isCountdownTimer) {
-      remainingTime -= now - startTime;
-    } else {
-      remainingTime += now - startTime;
-    }
-    startTime = now;
-    if (remainingTime > 0) {
-      update();
-    } else {
-      remainingTime = 0;
-    }
-    updateTimeText(remainingTime);
-  }, 10);
+    timerId = setTimeout(() => {
+        const now = Date.now();
+        remainingTime = targetDate.getTime() - now;
+
+        if (remainingTime > 0) {
+            updateTimeText(remainingTime);
+            update();
+        } else {
+            remainingTime = 0;
+            updateTimeText(remainingTime);
+        }
+    }, 10);
 };
 
 const internalAction = () => {
@@ -69,30 +82,24 @@ const externalAction = () => {
 };
 
 const startAction = () => {
-  if (timerId !== null) return;
-
-  startTime = Date.now();
-  update();
-  startButton.classList.remove("active-control");
-  stopButton.classList.add("active-control");
+    if (timerId !== null || !targetDate) return;
+    update();
+    startButton.classList.remove("active-control");
+    stopButton.classList.add("active-control");
 };
 
 const stopAction = () => {
-  if (timerId === null) return;
-
-  clearTimeout(timerId);
-  timerId = null;
-  stopButton.classList.remove("active-control");
-  startButton.classList.add("active-control");
+    if (timerId === null) return;
+    clearTimeout(timerId);
+    timerId = null;
+    stopButton.classList.remove("active-control");
+    startButton.classList.add("active-control");
 };
 
 const resetAction = () => {
-  if (isCountdownTimer) {
-    remainingTime = time;
-  } else {
-    remainingTime = 0;
-  }
-  updateTimeText(remainingTime);
+    if (!targetDate) return;
+    remainingTime = targetDate.getTime() - Date.now();
+    updateTimeText(remainingTime);
 };
 
 const setupAction = () => {
@@ -105,25 +112,12 @@ const setupAction = () => {
 };
 
 (() => {
-  internalButton.addEventListener("click", internalAction);
-  externalButton.addEventListener("click", externalAction);
-  startButton.addEventListener("click", startAction);
-  stopButton.addEventListener("click", stopAction);
-  resetButton.addEventListener("click", resetAction);
-  setupButton.addEventListener("click", setupAction);
+    startButton.addEventListener("click", startAction);
+    stopButton.addEventListener("click", stopAction);
+    resetButton.addEventListener("click", resetAction);
 
-  const isNumber = (value) => typeof value === "number" && isFinite(value);
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const timeParam = parseFloat(urlParams.get("time"), 10);
-  if (isNumber(timeParam) && 0 <= timeParam && timeParam < maxMinutes) {
-    time = timeParam * 60 * 1000;
-  }
-
-  const isStopwatch = urlParams.get("stopwatch");
-  if (isStopwatch !== null) {
-    externalAction();
-  }
-
-  resetAction();
+    targetDate = getTargetDate();
+    if (targetDate) {
+        resetAction();
+    }
 })();
