@@ -116,6 +116,11 @@ const setupAction = () => {
     stopButton.addEventListener("click", stopAction);
     resetButton.addEventListener("click", resetAction);
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const titlevalue = urlParams.get("title");
+    document.getElementById("title").textContent = titlevalue;
+
+
     targetDate = getTargetDate();
     if (targetDate) {
         resetAction();
