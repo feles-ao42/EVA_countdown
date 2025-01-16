@@ -2,7 +2,11 @@
 ``docker compose up -d``
 
 ## How to try
-- [https://github.com/feles-ao42/EVA_countdown](https://feles-ao42.github.io/EVA_countdown?daytime=202501231000&title=DEADLINE)
+- https://feles-ao42.github.io/EVA_countdown?daytime=202501231000&title=DEADLINE
+- URLにぞれぞれ
+-   daytime：締切の日時をYYYYMMDDHHMM
+-   title：任意の締切の名前
+-   を書いて使ってください．
 
 ## URL
 ``localhost:3000/?daytime=202501231000&title=任意ノ締切``
