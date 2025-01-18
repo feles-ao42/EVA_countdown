@@ -124,5 +124,6 @@ const setupAction = () => {
     targetDate = getTargetDate();
     if (targetDate) {
         resetAction();
+        startAction();
     }
 })();
