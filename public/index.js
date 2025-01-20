@@ -29,10 +29,28 @@ const updateTimeText = (time) => {
     setTimer(formattedH, formattedM, formattedS, formattedMs);
 };
 
+const get5minuteslater = () => {
+    const currentDateTimePlus5Min = new Date();
+    currentDateTimePlus5Min.setHours(currentDateTimePlus5Min.getHours() + 5);
+    const dateTimeplus5Formatted = currentDateTimePlus5Min.getFullYear() +
+        ('0' + (currentDateTimePlus5Min.getMonth() + 1)).slice(-2) +
+        ('0' + currentDateTimePlus5Min.getDate()).slice(-2) +
+        ('0' + currentDateTimePlus5Min.getHours()).slice(-2) +
+        ('0' + currentDateTimePlus5Min.getMinutes()).slice(-2);
+    return dateTimeplus5Formatted
+  };
+
+
 const getTargetDate = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const daytime = urlParams.get("daytime");
-    if (!daytime || daytime.length !== 12) return null;
+    let daytime = urlParams.get("daytime");
+    if (!daytime || daytime.length !== 12) {
+        daytime = null
+    }
+
+    if (daytime == null){
+        daytime = get5minuteslater()
+    }
 
     const year = parseInt(daytime.substring(0, 4));
     const month = parseInt(daytime.substring(4, 6)) - 1;
