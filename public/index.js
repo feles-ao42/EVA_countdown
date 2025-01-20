@@ -117,9 +117,12 @@ const setupAction = () => {
     resetButton.addEventListener("click", resetAction);
 
     const urlParams = new URLSearchParams(window.location.search);
-    const titlevalue = urlParams.get("title");
-    document.getElementById("title").textContent = titlevalue;
+    let titlevalue = urlParams.get("title");
+    if (titlevalue == null){
+        titlevalue = "締切まで"
+    }
 
+    document.getElementById("title").textContent = titlevalue;
 
     targetDate = getTargetDate();
     if (targetDate) {
